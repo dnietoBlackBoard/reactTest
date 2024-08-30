@@ -24,11 +24,12 @@ jobs:
         run: npm run build
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./website/build
+        run: main -d build
+        # uses: peaceiris/actions-gh-pages@v4
+        # if: github.ref == 'refs/heads/main'
+        # with:
+        #   github_token: ${{ secrets.GITHUB_TOKEN }}
+        #   publish_dir: ./website/build
 
       # # Popular action to deploy to GitHub Pages:
       # # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
