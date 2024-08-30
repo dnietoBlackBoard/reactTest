@@ -24,7 +24,7 @@ jobs:
         run: npm run build
 
       - name: Deploy
-        run: main -d build
+        run: gh-pages -d build
         # uses: peaceiris/actions-gh-pages@v4
         # if: github.ref == 'refs/heads/main'
         # with:
