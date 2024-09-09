@@ -1,33 +1,84 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useEffect, useState } from "react";
 import "./App.css";
+import { apiGetRepos } from "./services/apiRepositories";
+import ContributionsTable from "./features/Contributions/ContributionsTable";
+import Typography from "@mui/material/Typography";
+
+interface ContributionData {
+  id: string;
+  name: string;
+  description: string;
+  language: string;
+  html_url: string;
+}
+
+let contributionData: ContributionData[] = [];
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [learnContributions, setLearnContributions] = useState<
+    ContributionData[]
+  >([]);
+  const [studentContributions, setStudentContributions] = useState<
+    ContributionData[]
+  >([]);
+  const [reachContributions, setReachContributions] = useState<
+    ContributionData[]
+  >([]);
+
+  function filterByProduct(productName: string) {
+    const dataByProduct = contributionData
+      .filter((data) => data.name.startsWith(productName))
+      .map(({ language, ...data }) => ({
+        language: language !== null ? language : "API Collection",
+        ...data,
+      }));
+    console.log(dataByProduct);
+    return dataByProduct;
+  }
+
+  useEffect(() => {
+    async function getData() {
+      contributionData = await apiGetRepos();
+      console.log("DATA FROM SERVICE");
+      console.log(contributionData);
+      console.log("FILTERED LEARN DATA");
+      setLearnContributions(filterByProduct("Learn"));
+      setStudentContributions(filterByProduct("Student"));
+      setReachContributions(filterByProduct("Reach"));
+    }
+    getData();
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React + EDITED</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Typography variant="h2" gutterBottom>
+        Wellcome to the Community Contributions page!
+      </Typography>
+      <Typography variant="body1" align="justify" gutterBottom>
+        This is the index of the applications/programs/documentation currently
+        available for our different products, along with the language and a
+        brief description of its purpose.
+      </Typography>
+      <Typography variant="body1" align="justify" gutterBottom>
+        If you find any specific error or issue with any of the code
+        repositories, feel free to open a new issue within the repository of the
+        affected source and we'll review it.
+      </Typography>
+      <Typography variant="h2" align="left" gutterBottom>
+        Index
+      </Typography>
+      <Typography variant="h4" align="left" gutterBottom>
+        Learn
+      </Typography>
+      <ContributionsTable contributionDataRows={learnContributions} />
+      <Typography variant="h4" align="left" gutterBottom>
+        Student
+      </Typography>
+      <ContributionsTable contributionDataRows={studentContributions} />
+      <Typography variant="h4" align="left" gutterBottom>
+        Reach
+      </Typography>
+      <ContributionsTable contributionDataRows={reachContributions} />
     </>
   );
 }
