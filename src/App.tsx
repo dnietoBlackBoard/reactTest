@@ -32,6 +32,7 @@ function App() {
         language: language !== null ? language : "API Collection",
         ...data,
       }));
+    console.log(`Filtered ${productName} data`);
     console.log(dataByProduct);
     return dataByProduct;
   }
@@ -41,7 +42,6 @@ function App() {
       contributionData = await apiGetRepos();
       console.log("DATA FROM SERVICE");
       console.log(contributionData);
-      console.log("FILTERED LEARN DATA");
       setLearnContributions(filterByProduct("Learn"));
       setStudentContributions(filterByProduct("Student"));
       setReachContributions(filterByProduct("Reach"));
@@ -70,15 +70,33 @@ function App() {
       <Typography variant="h4" align="left" gutterBottom>
         Learn
       </Typography>
-      <ContributionsTable contributionDataRows={learnContributions} />
+      {learnContributions.length > 0 ? (
+        <ContributionsTable contributionDataRows={learnContributions} />
+      ) : (
+        <Typography variant="body1" align="justify" gutterBottom>
+          There are no Student contributions
+        </Typography>
+      )}
       <Typography variant="h4" align="left" gutterBottom>
         Student
       </Typography>
-      <ContributionsTable contributionDataRows={studentContributions} />
+      {studentContributions.length > 0 ? (
+        <ContributionsTable contributionDataRows={studentContributions} />
+      ) : (
+        <Typography variant="body1" align="justify" gutterBottom>
+          There are no Student contributions
+        </Typography>
+      )}
       <Typography variant="h4" align="left" gutterBottom>
         Reach
       </Typography>
-      <ContributionsTable contributionDataRows={reachContributions} />
+      {reachContributions.length > 0 ? (
+        <ContributionsTable contributionDataRows={reachContributions} />
+      ) : (
+        <Typography variant="body1" align="justify" gutterBottom>
+          There are no Reach contributions
+        </Typography>
+      )}
     </>
   );
 }
